@@ -1,8 +1,9 @@
 const express = require('express')
 const app = express()
 const PORT = 3000
+const moviesRouter = require('./routers/movies')
 
-app.use(express.static("public"))
+app.use(express.static('public'))
 app.use(express.json())
 
 app.listen(PORT, () => {
@@ -12,3 +13,5 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
     res.send('This is the entry point of the server')
 })
+
+app.use('/api/movies', moviesRouter)
