@@ -12,7 +12,7 @@ const show = (req, res) => {
 
     const id = req.params.id
     const moviesSql = 'SELECT * FROM movies WHERE id = ?'
-    const reviewSql = `SELECT id,text AS 'review',vote FROM reviews WHERE movie_id = ?`
+    const reviewSql = `SELECT * FROM reviews WHERE movie_id = ?`
 
     connection.query(moviesSql, [id], (err, moviesResults) => {
         if (err) return res.status(500).json({ error: 'Database query failed' })
@@ -29,8 +29,30 @@ const show = (req, res) => {
     })
 }
 
+const storeReview = (req, res) => {
+    const movieId = Number(req.params.id)
+    const { name, text, vote } = req.body
+
+    const sql = `INSERT INTO reviews(movie_id,name,text,vote) VALUES(?,?,?,?)`
+    console.log(movieId, name, text, vote);
+
+    connection.query(sql, [movieId, name, text, vote], (err, results) => {
+        if (err)
+            return res.status(500).json({
+                error: true,
+                message: err.message
+            })
+        res.status(201).json({
+            message: "Review created"
+        })
+    })
+
+}
+
+
 
 module.exports = {
     index,
-    show
+    show,
+    storeReview
 }
