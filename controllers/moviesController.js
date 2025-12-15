@@ -32,6 +32,25 @@ const show = (req, res) => {
 const storeReview = (req, res) => {
     const movieId = Number(req.params.id)
     const { name, text, vote } = req.body
+    const userVote = Number(vote);
+    if (!name || typeof name !== 'string' || name.length > 255) {
+        return res.status(400).json({
+            error: true,
+            message: "The name field must contain a string with max 255 characters."
+        });
+    }
+    if (isNaN(userVote) || userVote < 1 || userVote > 5) {
+        return res.status(400).json({
+            error: true,
+            message: "The rating field must contain a number between 1 and 5!"
+        });
+    }
+    if (!text || typeof text !== 'string' || text.length > 1500) {
+        return res.status(400).json({
+            error: true,
+            message: "The review field is required and must contain a string with max 1500 characters."
+        });
+    }
 
     const sql = `INSERT INTO reviews(movie_id,name,text,vote) VALUES(?,?,?,?)`
     console.log(movieId, name, text, vote);
